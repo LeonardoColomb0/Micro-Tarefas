@@ -198,7 +198,7 @@ export default {
 
 .tarefas-container {
   min-height: 100vh;
-  background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+  background: linear-gradient(135deg, #055679, #203a43, #2c5364);
   display: flex;
   justify-content: center;
   align-items: center;
