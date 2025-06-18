@@ -7,12 +7,12 @@ const jwt = require('jsonwebtoken');
 
 const app = express();
 const PORT = 3000;
-const SECRET = 'segredosecreto123'; // Troque na produção
+const SECRET = 'segredosecreto123'; 
 
 app.use(cors());
 app.use(bodyParser.json());
 
-// ✅ Conectar ao banco SQLite (arquivo será criado automaticamente)
+
 const db = new sqlite3.Database('./tarefas.db', (err) => {
   if (err) {
     console.error('❌ Erro ao conectar no banco:', err.message);
@@ -21,7 +21,7 @@ const db = new sqlite3.Database('./tarefas.db', (err) => {
   }
 });
 
-// ✅ Criar as tabelas, se não existirem
+
 db.serialize(() => {
   db.run(`
     CREATE TABLE IF NOT EXISTS usuarios (
@@ -43,7 +43,7 @@ db.serialize(() => {
   `);
 });
 
-// ✅ Middleware para autenticar token JWT
+
 function autenticarToken(req, res, next) {
   const authHeader = req.headers['authorization'];
   const token = authHeader && authHeader.split(' ')[1];
@@ -56,7 +56,7 @@ function autenticarToken(req, res, next) {
   });
 }
 
-// ✅ Cadastro
+
 app.post('/auth/register', (req, res) => {
   const { email, senha } = req.body;
   if (!email || !senha) {
@@ -76,7 +76,7 @@ app.post('/auth/register', (req, res) => {
   });
 });
 
-// ✅ Login
+
 app.post('/auth/login', (req, res) => {
   const { email, senha } = req.body;
   if (!email || !senha) {
@@ -101,7 +101,7 @@ app.post('/auth/login', (req, res) => {
   });
 });
 
-// ✅ Listar tarefas
+
 app.get('/tarefas', autenticarToken, (req, res) => {
   const sql = 'SELECT * FROM tarefas WHERE usuario_id = ?';
   db.all(sql, [req.usuario.id], (err, rows) => {
@@ -110,7 +110,7 @@ app.get('/tarefas', autenticarToken, (req, res) => {
   });
 });
 
-// ✅ Criar tarefa
+
 app.post('/tarefas', autenticarToken, (req, res) => {
   const { texto, data, hora } = req.body;
   if (!texto) return res.status(400).json({ error: 'Texto da tarefa é obrigatório' });
@@ -122,7 +122,7 @@ app.post('/tarefas', autenticarToken, (req, res) => {
   });
 });
 
-// ✅ Atualizar tarefa
+
 app.put('/tarefas/:id', autenticarToken, (req, res) => {
   const { texto, data, hora } = req.body;
   const { id } = req.params;
@@ -136,7 +136,7 @@ app.put('/tarefas/:id', autenticarToken, (req, res) => {
   });
 });
 
-// ✅ Deletar tarefa
+
 app.delete('/tarefas/:id', autenticarToken, (req, res) => {
   const { id } = req.params;
   const sql = 'DELETE FROM tarefas WHERE id = ? AND usuario_id = ?';
@@ -147,7 +147,7 @@ app.delete('/tarefas/:id', autenticarToken, (req, res) => {
   });
 });
 
-// ✅ Iniciar servidor
+
 app.listen(PORT, () => {
   console.log(`🚀 Servidor rodando em http://localhost:${PORT}`);
 });
